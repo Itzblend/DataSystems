@@ -1,0 +1,27 @@
+INSERT INTO trains.trains_info
+SELECT (data ->> 'trainNumber')::INTEGER AS train_number,
+       (data ->> 'departureDate')::DATE AS departure_date,
+       (data ->> 'trainType')::VARCHAR AS train_type,
+       (data ->> 'trainCategory')::VARCHAR AS train_category,
+       COALESCE(NULLIF((data ->> 'commercialTrack'),'')::VARCHAR, NULL) AS commuterline_id,
+       (data ->> 'runningCurrently')::BOOLEAN AS running_currently,
+       (data ->> 'cancelled')::BOOLEAN AS cancelled,
+       (data ->> 'version')::BIGINT AS version,
+       (data ->> 'timetableType')::VARCHAR AS timetable_type,
+       (data ->> 'timetableAcceptanceDate')::TIMESTAMP AS timetable_acceptance_date,
+       (timetablerows ->> 'stationShortCode')::VARCHAR AS station_shortcode,
+       (timetablerows ->> 'stationUICCode')::VARCHAR AS station_uic_code,
+       (timetablerows ->> 'countryCode')::VARCHAR AS countrycode,
+       (timetablerows ->> 'type')::VARCHAR AS type,
+       (timetablerows ->> 'trainStopping')::BOOLEAN AS train_stopping,
+       COALESCE(NULLIF((timetablerows ->> 'commercialTrack'),'')::INTEGER, NULL) AS commercial_track,
+       (timetablerows ->> 'cancelled')::BOOLEAN AS station_cancelled,
+       (timetablerows ->> 'scheduledTime')::TIMESTAMP AS scheduled_time,
+       (timetablerows ->> 'liveEstimateTime')::TIMESTAMP AS live_estimate_time,
+       (timetablerows ->> 'estimateSource')::VARCHAR AS estimate_source,
+       (timetablerows ->> 'differenceInMinutes')::INTEGER AS difference_minutes,
+       (timetablerows -> 'causes')::JSONB AS causes,
+       (data ->> 'fetchedAt')::TIMESTAMP AS fetched_at
+FROM trains_info_staging,
+     jsonb_array_elements(data -> 'timeTableRows') AS timetablerows
+ON CONFLICT DO NOTHING

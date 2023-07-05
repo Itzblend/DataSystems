@@ -1,0 +1,27 @@
+create table if not exists trains.trains_info
+(
+	train_number integer,
+	departure_date date,
+	train_type varchar,
+	train_category varchar,
+	commuterline_id varchar,
+	running_currently boolean,
+	cancelled boolean,
+	version bigint,
+	timetable_type varchar,
+	timetable_acceptance_date timestamp,
+	station_shortcode varchar,
+	station_uic_code varchar,
+	countrycode varchar,
+	type varchar,
+	train_stopping boolean,
+	commercial_track integer,
+	station_cancelled boolean,
+	scheduled_time timestamp,
+	live_estimate_time timestamp,
+	estimate_source varchar,
+	difference_minutes integer,
+	causes jsonb,
+	fetched_at timestamp,
+    PRIMARY KEY (train_number, departure_date, station_uic_code, scheduled_time, running_currently, cancelled)
+);
