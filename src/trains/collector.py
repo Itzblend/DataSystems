@@ -4,6 +4,7 @@ import json
 import os
 from datetime import datetime
 
+
 def _get_trains() -> dict:
     url = "https://rata.digitraffic.fi/api/v1/trains"
     trains_json = requests.get(url).json()

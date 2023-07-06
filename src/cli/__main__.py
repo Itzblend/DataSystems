@@ -1,5 +1,6 @@
 from src.trains.collector import _get_trains, write_dict_list_to_file
 from src.trains.db import _init_db, collect_files, copy_ndjson_to_table
+from src.trains.files import upload_to_hdfs
 import click
 import os
 import shutil
@@ -32,6 +33,9 @@ def trains_pipeline():
     for file in train_data_files:
         copy_ndjson_to_table(
             file, "trains", "trains_info", "src/trains/sql/etl/trains_info_etl.sql"
+        )
+        upload_to_hdfs(
+            file_path=file, target_path=file.replace("\\", "/").replace("data/", "")
         )
 
 
